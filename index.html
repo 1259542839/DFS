@@ -1,0 +1,140 @@
+<html>
+<body>
+<script>
+/*
+ * the search function for all kinds of showing list
+ */
+function searchLists(paramObj, eleName) {
+	var dbParam, xmlhttp, listsObj, x, txt = "";
+	dbParam = JSON.stringify(paramObj);
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	// parse the return json object
+	    	listsObj = JSON.parse(this.responseText);
+	        for (x in listsObj) {
+	            txt += listsObj[x].id + "," + listsObj[x].name + "," + listsObj[x].desc + "<br>";
+	        }
+	        document.getElementById(eleName).innerHTML = txt;
+	    }
+	};
+	xmlhttp.open("GET", "./searchLists.php?dbParams=" + dbParam, true);
+	xmlhttp.send();	
+}
+
+/*
+ * the search function for showing tasks under one list
+ * TODO: return with list details
+ */
+function searchTasks(paramObj, eleName) {
+	var dbParam, xmlhttp, tasksObj, x, txt = "";
+	dbParam = JSON.stringify(paramObj);
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	// parse the return json object
+	    	tasksObj = JSON.parse(this.responseText);
+	        for (x in tasksObj) {
+	            txt += tasksObj[x].id + "," + tasksObj[x].name + "," + tasksObj[x].completed + "<br>";
+	        }
+	        document.getElementById(eleName).innerHTML = txt;
+	    }
+	};
+	xmlhttp.open("GET", "./searchTasks.php?dbParams=" + dbParam, true);
+	xmlhttp.send();	
+}
+
+/*
+ * add a new list or update an existing list
+ */
+function updateList(paramObj, eleName) {
+	// TODO: if id is null, check name have the value for new list to add
+	// TODO: if id is not null, check name or desc have the value to update
+	var dbParam, xmlhttp = "";
+	dbParam = JSON.stringify(paramObj);
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	// TODO: parse the returns
+	        document.getElementById(eleName).innerHTML = JSON.parse(this.responseText);
+	    }
+	};
+	xmlhttp.open("GET", "./updateList.php?dbParams=" + dbParam, true);
+	xmlhttp.send();	
+}
+
+/*
+ * add a new task under a list or update an existing task
+ */
+function updateTask(paramObj, eleName) {
+	// TODO: if id is null, check listId and name have the value for new task to add
+	// TODO: if id is not null, check name or completed have the value to update
+	var dbParam, xmlhttp = "";
+	dbParam = JSON.stringify(paramObj);
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	// TODO: parse the returns
+	        document.getElementById(eleName).innerHTML = JSON.parse(this.responseText);
+	    }
+	};
+	xmlhttp.open("GET", "./updateTask.php?dbParams=" + dbParam, true);
+	xmlhttp.send();	
+}
+
+</script>
+<h2>Show All TodoLists</h2>
+<p id="showAllLists"></p>
+
+<h2>Show TodoLists searching with keyword "Home"</h2>
+<p id="showSearchedLists"></p>
+
+<h2>Show TodoLists searching with "id"</h2>
+<p id="showIdLists"></p>
+
+<h2>Show Tasks for selected List id "d290f1ee-6c54-4b01-90e6-d701748f0851"</h2>
+<p id="showTasks"></p>
+
+<h2>Add new list with "test"/"test"</h2>
+<p id="addNewList"></p>
+
+<h2>Update list with id</h2>
+<p id="updateList"></p>
+
+<h2>Add new task under a list</h2>
+<p id="addNewTask"></p>
+
+<h2>Update task with id</h2>
+<p id="updateTask"></p>
+
+<script>
+var paramObj = "";
+
+paramObj = { "skip:":"0", "limit":"10" };
+searchLists(paramObj, "showAllLists");
+
+paramObj = { "searchString":"Home" };
+searchLists(paramObj, "showSearchedLists");
+
+paramObj = { "id":"d290f1ee-6c54-4b01-90e6-d701748f0851" };
+searchLists(paramObj, "showIdLists");
+
+paramObj = { "listId":"d290f1ee-6c54-4b01-90e6-d701748f0851" };
+searchTasks(paramObj, "showTasks");
+
+paramObj = { "name":"test", "desc":"test" };
+updateList(paramObj, "addNewList");
+
+paramObj = { "id":"d290f1ee-6c54-4b01-90e6-d701748f0851", "desc":"test" };
+updateList(paramObj, "updateList");
+
+paramObj = { "listId":"d290f1ee-6c54-4b01-90e6-d701748f0851", "name":"test" };
+updateTask(paramObj, "addNewTask");
+
+paramObj = { "id":"0e2ac84f-f723-4f24-878b-44e63e7ae580", "completed":"1" };
+updateTask(paramObj, "updateTask");
+
+</script>
+
+</body>
+</html>
